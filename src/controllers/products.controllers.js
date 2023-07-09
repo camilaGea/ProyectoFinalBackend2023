@@ -38,7 +38,7 @@ class ProductsController {
             }
 
             //console.log('producto 2 ' + JSON.stringify(producto))
-            res.send({status: 'Success', mensaje:"Products", producto})    
+            return ({status: 'Success', producto})    
         }catch (error){
             res.status(500).send({status:"error", error:error.message})
         }
@@ -61,9 +61,11 @@ class ProductsController {
             const id = req.params.id
             const producto = await productsService.deleteProduct(id)
             console.log (producto)
-            res.status(200).send({ mensaje: "Product eliminado", producto })
+            if (producto){
+                return  producto
+            }
         } catch (error) {
-            res.status(500).send({ status: "error", error: error.message })
+            return ({ status: "error", error: error.message })
         }  
     }
     

@@ -31,7 +31,9 @@ export default class CartMongo{
             console.log(cid)
             console.log(pid)
             let cart = await cartModel.findOne({ _id: cid })
+            console.log('CART' + cart)
             const product = cart.product.find((prod) => prod.idProduct._id == pid)
+            console.log('PRODUCT' + product)
             if(product){
                 return await cartModel.updateOne({_id:cid,'product.idProduct': pid}, {$inc: {'product.$.quantity': 1}})
             }else{

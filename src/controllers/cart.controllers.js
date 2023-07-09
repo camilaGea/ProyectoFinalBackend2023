@@ -7,6 +7,7 @@ const cartService = new CartsService()
 const productsService = new ProductsService()
 
 class CartController {
+
     getCartById = async (req,res) => {
         try{
             const id = req.params.cid
@@ -35,10 +36,10 @@ class CartController {
          const cart = await cartService.getAllCartById(cid);
      
          if(!cart || cart.status === "error"){
-             return res.status(404).send({status: "error", error: `No existe el carrito id ${cid}` })
+            return res.status(404).send({status: "error", error: `No existe el carrito id ${cid}` })
          }
          if(!product || product.status === "error"){
-             return res.status(404).send({status: "error", error: `No existe el producto id ${pid}` })
+            return res.status(404).send({status: "error", error: `No existe el producto id ${pid}` })
          }
      
          const result = await cartService.newProductInCart(cid,pid);

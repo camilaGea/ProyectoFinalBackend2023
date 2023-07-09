@@ -4,6 +4,7 @@ import CartController from "../controllers/cart.controllers.js"
 const cartController = new CartController()
 const router = Router()
 
+
 router.post('/', cartController.postCart ) // crear un carrito 
 router.get("/:cid",cartController.getCartById ) // ver un cart por id
 router.post('/:cid/product/:pid', cartController.postProductByCart) // agregar un producto a un carrito
