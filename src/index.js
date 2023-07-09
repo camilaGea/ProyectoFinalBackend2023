@@ -14,12 +14,14 @@ import ProductManagerMongo from "./dao/managerMongo/productMongo.js";
 import MenssageMongo from "./dao/managerMongo/menssageMongo.js";
 import mongoose from "mongoose";
 import initializePassport from "./config/passport.config.js";
+import {config} from './config/config.js'
 
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
 
-const PORT = 8080;
-const MONGO = 'mongodb+srv://camilagea4:tipa1527@cluster0.tuiclhb.mongodb.net/ecommerce?retryWrites=true&w=majority'
+const PORT = config.server.port;
+const MONGO = config.mongo.url
+
 const app = express();
 const server = app.listen(PORT, ()=>{console.log('servidor funcionando en e puerto ' + PORT)});
 

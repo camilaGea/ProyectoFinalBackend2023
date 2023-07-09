@@ -4,6 +4,7 @@ import userModel from '../dao/models/user.model.js'
 import GitHubStrategy from 'passport-github2';
 import {createHash, validatePassword} from '../utils.js'
 import CartsService from '../services/cart.service.js'
+import {config} from './config.js'
 
 const cartService = new CartsService()
 const LocalStrategy = local.Strategy;
@@ -37,7 +38,9 @@ const initializePassport = () => {
                     console.log('El usuario existe');
                     return done(null,false);
                 }
-                if (email == 'adminCoder@coder.com' && password == 'adminCod3r123') {
+                const emailAdmin = config.auth.account
+                const passAdmin = config.auth.pass
+                if (email == emailAdmin && password == passAdmin) {
                     const newUser = {
                         nombre, apellido, email, edad, password: createHash(password) , rol: 'admin'
                     }
