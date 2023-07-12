@@ -6,6 +6,7 @@ const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 const CORREO_ADMIN = process.env.CORREO_ADMIN;
 const PASSWORD_ADMIN = process.env.PASSWORD_ADMIN;
+const SECRET = process.env.SECRET;
 
 export const config = {
     server: {
@@ -17,5 +18,8 @@ export const config = {
     auth: {
         account: CORREO_ADMIN,
         pass: PASSWORD_ADMIN
+    },
+    session: {
+        secret: SECRET
     }
 }

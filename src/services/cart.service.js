@@ -18,7 +18,6 @@ class CartsService{
 
     newProductInCart = async (cid, pid) => {
         const result = await carts.addProductInCart(cid,pid);
-        console.log(result)
         return result
     }
 
@@ -26,9 +25,8 @@ class CartsService{
         const result = await carts.deleteProductInCart(cid, pid);
         return result 
     }
-
     
-    updateProductInCartByCant = async (cid, products) => {
+    updateProductInCart = async (cid, products) => {
         const result = await carts.updateProductInCart(cid, products)
         return result
     }
@@ -39,9 +37,11 @@ class CartsService{
     }
     
     deleteProductsCart = async (cid) => {
-        const result = await carts.deleteProductInCart(cid)
+        const result = await carts.deleteProductsInCart(cid)
         return result
     }
+
+    
 
 }
 

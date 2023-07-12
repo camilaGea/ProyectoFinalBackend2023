@@ -19,62 +19,36 @@ export default class CartMongo{
     }
 
     async getCartById(cid){
-        try{
-            return await cartModel.findOne({_id: cid}).lean()
-        }catch(error){
-            return { status: "error", error: error }; 
-        }
+        return await cartModel.findOne({_id: cid}).lean()
     }
 
     async addProductInCart (cid, pid){
-        try{
-            console.log(cid)
-            console.log(pid)
-            let cart = await cartModel.findOne({ _id: cid })
-            console.log('CART' + cart)
-            const product = cart.product.find((prod) => prod.idProduct._id == pid)
-            console.log('PRODUCT' + product)
-            if(product){
+        let cartResult = await cartModel.findOne({ _id: cid })
+        const productResult = cartResult.product.find((prod) => prod.idProduct._id == pid)
+            
+        if(productResult){
                 return await cartModel.updateOne({_id:cid,'product.idProduct': pid}, {$inc: {'product.$.quantity': 1}})
-            }else{
+        }else{
                 return await cartModel.updateOne({_id:cid}, {$push: {product: {idProduct: pid , quantity: 1}}})
-            }
-        }catch(error){
-            return { status: "error", error: "no se pudo realizar el metodo" }; 
         }
     }
 
     async deleteProductInCart (cid,pid){
-        try{
-            let cart = await cartModel.findOne({ _id: cid })
-            const products = cart.product.filter((prod) => prod.idProduct._id != pid)
-            return await cartModel.updateOne({_id: cid}, {$set: {product: products}})
-        }catch(error){
-            return { status: "error", error: error };
-        }
+        let cartresult = await cartModel.findOne({ _id: cid })
+        const products = cartresult.product.filter((prod) => prod.idProduct._id != pid)
+        return await cartModel.updateOne({_id: cid}, {$set: {product: products}})
     }
 
     async updateProductInCart (cid, cambio){
-        try{
-            return await cartModel.updateOne({_id:cid}, {$set: {product: cambio}} )
-        }catch(error){
-            return { status: "error", error: error };
-        }
+        return await cartModel.updateOne({_id:cid}, {$set: {product: cambio}} )
     }
 
     async updateQtyProductInCart (cid, pid , qty){
-        try{
-            return await cartModel.updateOne({'product.idProduct': pid, _id:cid} , {$set: { 'product.$.quantity': qty }})
-        }catch(error){
-            return { status: "error", error: error };
-        }
+        return await cartModel.updateOne({'product.idProduct': pid, _id:cid} , {$set: { 'product.$.quantity': qty }})
     }
 
     async deleteProductsInCart(cid){
-        try{
-            return await cartModel.updateOne({_id:cid}, {$set: {product: []}} )
-        }catch(error){
-            return { status: "error", error: error };
-        }
+        return await cartModel.updateOne({_id:cid}, {$set: {product: []}} )
+
     }
 }

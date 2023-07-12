@@ -1,11 +1,15 @@
 import passport from 'passport'
 import local from 'passport-local'
-import userModel from '../dao/models/user.model.js'
+//import userModel from '../dao/models/user.model.js'
 import GitHubStrategy from 'passport-github2';
 import {createHash, validatePassword} from '../utils.js'
 import CartsService from '../services/cart.service.js'
 import {config} from './config.js'
+import UserService from '../services/user.services.js'
 
+
+
+const userService = new UserService()
 const cartService = new CartsService()
 const LocalStrategy = local.Strategy;
 
@@ -18,7 +22,7 @@ const initializePassport = () => {
 
     passport.deserializeUser( async (id, done)=>{
         try {
-            let user = await userModel.findById(id)
+            let user = await userService.getUserById(id)
             console.log("deserializeUser" + user)
             done(null, user)
         } catch (error) {
@@ -30,10 +34,15 @@ const initializePassport = () => {
     
     passport.use('register', new LocalStrategy(
         {passReqToCallback:true, usernameField:'email'}, 
-        async (req,username, password,done) =>{
+        async (req, username, password, done) =>{
             const { nombre, apellido, email, edad } = req.body;
             try {
-                const user = await userModel.findOne({email:username}); 
+                //console.log(req.body)
+                //console.log('PASS', password)
+                if (!nombre || !apellido || !email || !edad) {
+                    return done(null,false, req.body); // 
+                }
+                const user = await userService.getUser({email:username}); 
                 if(user){
                     console.log('El usuario existe');
                     return done(null,false);
@@ -44,7 +53,7 @@ const initializePassport = () => {
                     const newUser = {
                         nombre, apellido, email, edad, password: createHash(password) , rol: 'admin'
                     }
-                    const result = await userModel.create(newUser);
+                    const result = await userService.addUser(newUser);
                     return done(null, result);
                 }
 
@@ -59,22 +68,20 @@ const initializePassport = () => {
                     password: createHash(password)
                 }
 
-                const result = await userModel.create(newUser);
+                const result = await userService.addUser(newUser);
                 return done(null, result);
 
             } catch (error) {
-                return done("Error al registrar el usuario: " + error);
+                return done(error);
             }
         }
     ));
 
     passport.use('login', new LocalStrategy({usernameField:'email'}, async (username, password, done)=>{
-
         try {
-           
-           const user = await userModel.findOne({email:username})
-           //console.log(user);
-            if(!user){
+           const user = await userService.getUser({email:username})
+           console.log(user);
+           if(!user){
                 console.log('No existe el usuario');
                 return done(null, false);
             }
@@ -82,11 +89,8 @@ const initializePassport = () => {
             return done(null,user);
 
         } catch (error) {
-            
             return done("Error al intentar ingresar: " + error);
-            
         }
-
     }))
 
     passport.use('github', new GitHubStrategy({
@@ -98,19 +102,18 @@ const initializePassport = () => {
         try {
             console.log('profile' + profile._json); //vemos toda la info que viene del profile
             const email = profile.emails[0].value;
-            let user = await userModel.findOne({email}).exec()
+            let user = await userService.getUser({email}).exec()
             if(!user){
-
                 const cart = await cartService.newCart()
                 const newUser = {
-                        nombre: profile._json.name,
-                        apellido:'',
-                        email: email,
-                        edad: 18,
-                        cart: cart._id,
-                        password: '',
+                    nombre: profile._json.name,
+                    apellido:'',
+                    email: email,
+                    edad: 18,
+                    cart: cart._id,
+                    password: '',
                 }
-                const result = await userModel.create(newUser);
+                const result = await userService.addUser(newUser);
                 done(null,result)
             }else{
                 //ya existe

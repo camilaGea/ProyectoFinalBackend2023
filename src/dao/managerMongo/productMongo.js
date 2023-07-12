@@ -1,6 +1,5 @@
 import productosModel from '../models/product.model.js'
 
-
 export default class ProductManagerMongo {
 
     async getProducts(limit,page,category,disp,sort){    
@@ -55,19 +54,11 @@ export default class ProductManagerMongo {
 
     async addProduct(product){
         try{
-
-        
-            if(!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category){
-                return { status: "error", message: "No ha llenado los datos" }
-            }
-
             const codProduct = await productosModel.findOne({code: product.code})
-            console.log( codProduct)
             
             if(codProduct){
                 return { status: "error", message: "codigo repetido!" }
             }
-
 
             const newProduct = {
                 title: product.title,

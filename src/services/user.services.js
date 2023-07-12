@@ -1,13 +1,12 @@
 import { UserManagerMongo } from "../dao/managerMongo/userMongo.js";
 import { UserDTO } from "../dao/DTOs/user.dto.js";
 
-const userDTO = new UserDTO
 const mongoUserManager = new UserManagerMongo
 
 class UserService {
     async addUser(user){
         try {
-            let usuario = await userDTO.user(user)
+            let usuario = new UserDTO(user)
             return await mongoUserManager.addUser(usuario)
         } catch (error) {
             console.log(error)
@@ -26,8 +25,15 @@ class UserService {
 
     async getUser(email){
         try {
-            let userEmail = await userDTO.userByEmail(email)
-            let user = await mongoUserManager.getUser(userEmail)
+            let user = await mongoUserManager.getUser(email)
+            return user
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getUserById(id){
+        try {
+            let user = await mongoUserManager.getUserById(id)
             return user
         } catch (error) {
             console.log(error)

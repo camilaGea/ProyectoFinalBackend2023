@@ -1,4 +1,7 @@
 import ProductsServices from '../services/products.services.js'
+import {CustomError} from '../errors/customError.js'
+import {EError} from '../errors/enum.js'
+import {generateProductErrorInfo, generateProductErrorParam} from '../errors/infoError.js'
 
 const productsService = new ProductsServices()
 
@@ -12,11 +15,21 @@ class ProductsController {
             res.status(500).send({status:"error", error:error.message})
         }
     }
+
     getProductsById = async (req,res)=>{
         try{
             const id = req.params.id;
-            console.log( id)
+
+            if( id.length !== 24 ){
+                CustomError.createError({
+                    name: "Product error",
+                    cause: generateProductErrorParam(id),
+                    message: "Error al acceder a un producto por id",
+                    errorCode: EError.INVALID_PARAM
+                })
+            }
             const produc = await productsService.getAllProductsById(id);
+            
             res.send({mensaje:"Producto id",products: produc})
         } catch (error) {
             res.status(500).send({status:"error", error:error.message})
@@ -25,22 +38,25 @@ class ProductsController {
 
     postProduct =  async (req,res)=> {
         try{
-            const {title, description, price, thumbnail, code, stock, category, status} = req.body
-            
-            const producto = await productsService.newProduct(title,description,price,thumbnail,code,stock, category, status)
-            
-            console.log('Producto 1' , JSON.stringify(producto))
-            if (producto.status === "error") {
-                return res.status(400).send({
-                    status: "error",
-                    error: producto,
-                });
+            let {title, description, price, thumbnail, code, stock, category, status} = req.body
+            if(status === undefined){ status = false}
+
+            if(!title || !description || !price || !code || !stock || !category){
+                CustomError.createError({
+                    name: "Product error",
+                    cause: generateProductErrorInfo(req.body),
+                    message: "Error al crear un Producto",
+                    errorCode: EError.INVALID_JSON
+                })
             }
 
-            //console.log('producto 2 ' + JSON.stringify(producto))
-            return ({status: 'Success', producto})    
+            let producto = await productsService.newProduct(title,description,price,thumbnail,code,stock, category, status)
+            if (producto.status === "error") {
+                return res.status(400).send({producto});
+            }
+            res.send({status: 'Success', producto})    
         }catch (error){
-            res.status(500).send({status:"error", error:error.message})
+            res.status(500).send({status:"error 500", error:error.message})
         }
     }
 
@@ -48,7 +64,20 @@ class ProductsController {
         try{
             const { body } = req;
             const { id } = req.params;
+
+            if( id.length !== 24 ){
+                CustomError.createError({
+                    name: "Product error",
+                    cause: generateProductErrorParam(id),
+                    message: "Error al acceder a un producto por id",
+                    errorCode: EError.INVALID_PARAM
+                })
+            }
+
             const producto = await productsService.updateProductById(id, body);
+            if(producto.status === "error"){
+                return res.status(400).send({producto});
+            }
             res.status(200).send({mensaje: "Producto actualizado",producto})
     
         }catch (error){
@@ -59,13 +88,25 @@ class ProductsController {
     deleteProductById = async (req, res) => {
         try {
             const id = req.params.id
-            const producto = await productsService.deleteProduct(id)
-            console.log (producto)
-            if (producto){
-                return  producto
+
+            if( id.length !== 24 ){
+                CustomError.createError({
+                    name: "Product error",
+                    cause: generateProductErrorParam(id),
+                    message: "Error al acceder a un producto por id",
+                    errorCode: EError.INVALID_PARAM
+                })
             }
+
+            const producto = await productsService.deleteProduct(id)
+
+            if (producto.status === "error") {
+                return res.status(400).send({producto});
+            }
+
+            return res.status(200).send({menssage:"paso", producto});
         } catch (error) {
-            return ({ status: "error", error: error.message })
+            res.status(500).send({error:error.message})
         }  
     }
     

@@ -9,10 +9,10 @@ export class UserManagerMongo{
         }
     }
 
-    async getUsers(){
+    async getUserById(id){
         try {
-            let users = await userModel.find()
-            return users
+            let user = await userModel.findOne({ _id: id })
+            return user
         } catch (error) {
             console.log(error)
         }
@@ -20,7 +20,7 @@ export class UserManagerMongo{
     
     async getUser(email){
         try {
-            let user = await userModel.findOne({email: email})
+            let user = await userModel.findOne(email)
             return user
         } catch (error) {
             console.log(error)
