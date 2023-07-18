@@ -10,6 +10,7 @@ class SessionsControllers{
     register =  async (req, res) =>{
         try{
             res.status(200).send({ message:"User registered"});
+            req.logger.info("Registro Completado")
         }catch(error){
             res.status(500).send(error.message)
         }
@@ -17,8 +18,6 @@ class SessionsControllers{
 
     registerFail = async (req, res) => {
         try{
-            console.log('Fallo en el ingreso');
-            //console.log(req.body)
             CustomError.createError({
                 name: "Product error",
                 cause: generateUserErrorInfo(req.body),
@@ -26,6 +25,7 @@ class SessionsControllers{
                 errorCode: EError.INVALID_JSON
             })
         }catch(error){
+            req.logger.error("fallo al registarse");
             res.status(400).send({ error: error.message});
 
         }
@@ -47,12 +47,13 @@ class SessionsControllers{
             res.status(200).send({payload: user, message:"Primer logueo!!"})
 
         }catch(error){
+            req.logger.error("fallo el login")
             res.status(500).send({error: error.message})
         }
     }
 
     loginFail = async (req,res)=>{
-        console.log('Fallo en el ingreso');
+        req.logger.error("fallo el ingreso")
         res.send({error: 'Error en el ingreso'})
     }
 
@@ -73,7 +74,7 @@ class SessionsControllers{
             let user = await userService.getUser(req.session.email)
             res.send(user)
         }catch(error){
-            console.log(error)
+            req.logger.error(error)
         }
     }
 }

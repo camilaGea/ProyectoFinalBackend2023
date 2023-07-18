@@ -12,12 +12,14 @@ import productRouter from "./routes/products.router.js"
 import cartRouter from "./routes/cart.router.js"
 import sessionsRouter from "./routes/sessions.router.js"
 import mockingRouter from "./routes/mosckin.router.js"
+import loggerTest from "./routes/logger.router.js"
 import ProductManagerMongo from "./dao/managerMongo/productMongo.js";
 import MenssageMongo from "./dao/managerMongo/menssageMongo.js";
 import mongoose from "mongoose";
 import initializePassport from "./config/passport.config.js";
 import {config} from './config/config.js'
 import {errorHandler} from './middleware/errorHandle.js'
+import { addLogger } from './utils.js'
 
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
@@ -49,11 +51,15 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-app.use('/mockingproducts', mockingRouter)
+app.use(addLogger)
+
 app.use('/', viewsRouter);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/sessions', sessionsRouter)
+app.use('/mockingproducts', mockingRouter)
+app.use('/loggerTest', loggerTest)
+
 app.use(errorHandler)
 
 const io = new Server(server)

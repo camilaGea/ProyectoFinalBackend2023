@@ -1,13 +1,10 @@
 import passport from 'passport'
 import local from 'passport-local'
-//import userModel from '../dao/models/user.model.js'
 import GitHubStrategy from 'passport-github2';
 import {createHash, validatePassword} from '../utils.js'
 import CartsService from '../services/cart.service.js'
 import {config} from './config.js'
 import UserService from '../services/user.services.js'
-
-
 
 const userService = new UserService()
 const cartService = new CartsService()
@@ -77,13 +74,14 @@ const initializePassport = () => {
         }
     ));
 
-    passport.use('login', new LocalStrategy({usernameField:'email'}, async (username, password, done)=>{
+    passport.use('login', new LocalStrategy({usernameField:'email'}, 
+    async ( username, password, done)=>{
         try {
            const user = await userService.getUser({email:username})
-           console.log(user);
+           //console.log("USER ", user);
            if(!user){
-                console.log('No existe el usuario');
-                return done(null, false);
+               //req.logger.info("No existe el ususario")
+               return done(null, false);
             }
             if(!validatePassword(password,user)) return done (null, false);
             return done(null,user);

@@ -8,8 +8,8 @@ const router = Router();
 router.post('/register', passport.authenticate('register', {failureRedirect:'/api/sessions/failregister'}), sessionsControllers.register)
 router.post('/failregister', sessionsControllers.registerFail)
 
-router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin'}), sessionsControllers.login)
-router.get('/faillogin', sessionsControllers.loginFail)
+router.post('/login', passport.authenticate('login',{failureRedirect:'/api/sessions/faillogin'}), sessionsControllers.login)
+router.post('/faillogin', sessionsControllers.loginFail)
 
 router.get('/logout', sessionsControllers.logout)
 

@@ -52,6 +52,7 @@ class ProductsController {
 
             let producto = await productsService.newProduct(title,description,price,thumbnail,code,stock, category, status)
             if (producto.status === "error") {
+                req.logger.error('error en productService ')
                 return res.status(400).send({producto});
             }
             res.send({status: 'Success', producto})    
@@ -101,6 +102,7 @@ class ProductsController {
             const producto = await productsService.deleteProduct(id)
 
             if (producto.status === "error") {
+                req.logger.error('error eliminar en product services')
                 return res.status(400).send({producto});
             }
 

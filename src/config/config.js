@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const ENVIRONMENT = "production"
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 const CORREO_ADMIN = process.env.CORREO_ADMIN;
@@ -21,5 +22,8 @@ export const config = {
     },
     session: {
         secret: SECRET
+    },
+    entorno: {
+        environment: ENVIRONMENT
     }
 }
