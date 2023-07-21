@@ -20,6 +20,7 @@ import initializePassport from "./config/passport.config.js";
 import {config} from './config/config.js'
 import {errorHandler} from './middleware/errorHandle.js'
 import { addLogger } from './utils.js'
+import { getLogger } from "./utils.js";
 
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
@@ -29,7 +30,10 @@ const MONGO = config.mongo.url
 const SECRET = config.session.secret
 
 const app = express();
-const server = app.listen(PORT, ()=>{console.log('servidor funcionando en e puerto ' + PORT)});
+app.use(addLogger)
+
+const logg = getLogger()
+const server = app.listen(PORT, () =>{ logg.info('servidor funcionando en e puerto ' + PORT)});
 
 app.use(express.json());// entiende los datos que me envian
 app.use(express.urlencoded({extended:true}));
@@ -51,7 +55,6 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-app.use(addLogger)
 
 app.use('/', viewsRouter);
 app.use('/api/products', productRouter);
@@ -65,7 +68,7 @@ app.use(errorHandler)
 const io = new Server(server)
 
 io.on('connection',  socket =>{
-    console.log('Usuario conectado');
+    logg.info('Usuario conectado')
 
     //agregar producto
     socket.on("newProduct", async(data) =>{ //escucho lo que me manda el cliente
@@ -75,16 +78,13 @@ io.on('connection',  socket =>{
             return io.emit("productAdd", { status: "error", message: mens}) //envio al cliente el error  
         }
         const dataActualizada = await pm.getP();// cargo todo correcto
-        console.log (dataActualizada)
         return io.emit("productAdd", dataActualizada) // envio al cliente los productos actualizados con el reciente cargado
     }) 
     
     //eliminar Producto
     socket.on("productDelete", async (pid) =>{ //escucho lo que me manda el cliente
-        //console.log(pid.id)
-        
         const id = await pm.getProductsId(pid) //busco el producto con ese id
-        //console.log(id)
+        
         if(id){
             await pm.deleteProduct(pid); //elimino el producto con el id enviado desde el cliente
             const dataActualizada = await pm.getP(); // traigo los productos actualizados
@@ -112,9 +112,9 @@ io.on('connection',  socket =>{
 const connectDB = async () => {
     try{
         await mongoose.connect(MONGO);
-        console.log("Conexion con DB correcta")
+        logg.info("Conexion con DB correcta")
     }catch (error){
-        console.log(`Fallo al conectar con DB. Error: ${error}`)
+        logg.error(`Fallo al conectar con DB. Error: ${error}`)
     }
 }
 

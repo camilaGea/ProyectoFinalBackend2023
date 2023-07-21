@@ -1,6 +1,4 @@
 export const adminAccess = (req, res, next) => {
-    //console.log('PASO POR EL VERIFICADOR')
-    //console.log(req.session)
     if(req.session.user && req.session.user.rol == 'admin'){
         next()
     }
@@ -8,8 +6,6 @@ export const adminAccess = (req, res, next) => {
 }
 
 export const userAccess = (req, res, next) => {
-    //console.log('PASO POR EL VERIFICADOR')
-    //console.log(req.session)
     if(req.session.user && req.session.user.rol == 'usuario'){
         next()
     }

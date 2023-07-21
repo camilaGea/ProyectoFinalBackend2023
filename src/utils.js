@@ -56,6 +56,10 @@ export function addLogger(req, res, next){
     next()
 }
 
+export function getLogger() {
+    return logger;
+}
+
 
 export const customFaker = new Faker({ locale: [en]})
 

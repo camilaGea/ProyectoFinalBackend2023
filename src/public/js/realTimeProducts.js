@@ -1,5 +1,4 @@
 const socket = io();
-console.log("cliente conectado");
 
 //agregar producto
 
@@ -29,9 +28,9 @@ formAdd.addEventListener("submit", (e) => {
     });
 });
 
-socket.on("productAdd", (data) => {
+socket.on("productAdd", (req, res, data) => {
     if (data.status === "error") {
-        return console.log(data.message);
+       return req.logger.info(data.message)
     }
     let list = "";
     data.forEach(({ _id, title, price, code, stock, category, description, status }) => {
@@ -75,9 +74,9 @@ formDelete.addEventListener("submit", (evt) => {
     socket.emit("productDelete", { _id: id.value }); //envio el id producto a eliminar desde el Cliente al Servidor
 });
 
-socket.on("newList", (data) => { //escucho lo que me envia el servidor 
+socket.on("newList", (req, data) => { //escucho lo que me envia el servidor 
     if (data.status === "error") {
-        return console.log(data.message);
+        return req.logger.info(data.message)
     }
     let list = "";
     data.forEach(({ _id, title, price, code, stock, category, description, status }) => {
@@ -93,7 +92,6 @@ socket.on("newList", (data) => { //escucho lo que me envia el servidor
                     <td>${status}</td>
                     </tr>`;
     });
-    //console.log(list);
     const listAct =
         ` <tr>
             <th scope="col">ID</th>

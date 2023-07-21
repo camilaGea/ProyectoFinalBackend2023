@@ -12,19 +12,18 @@ const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
 
-    passport.serializeUser((user,done)=>{
-        console.log("serializeUser" + user)
+    passport.serializeUser((req, user,done)=>{
+        req.logger.info('serialize user')
         done(null, user._id)
     });
 
-    passport.deserializeUser( async (id, done)=>{
+    passport.deserializeUser( async (req, id, done)=>{
         try {
             let user = await userService.getUserById(id)
-            console.log("deserializeUser" + user)
+            req.logger.info('deserialize User')
             done(null, user)
         } catch (error) {
-            console.log("deserializeUser error" + error)
-            //console.log(error)
+            req.logger.error('Deserialize User error')
             done(error)
         }
     })
@@ -34,14 +33,12 @@ const initializePassport = () => {
         async (req, username, password, done) =>{
             const { nombre, apellido, email, edad } = req.body;
             try {
-                //console.log(req.body)
-                //console.log('PASS', password)
                 if (!nombre || !apellido || !email || !edad) {
                     return done(null,false, req.body); // 
                 }
                 const user = await userService.getUser({email:username}); 
                 if(user){
-                    console.log('El usuario existe');
+                    req.logger.info('el usuario existe')
                     return done(null,false);
                 }
                 const emailAdmin = config.auth.account
@@ -75,12 +72,12 @@ const initializePassport = () => {
     ));
 
     passport.use('login', new LocalStrategy({usernameField:'email'}, 
-    async ( username, password, done)=>{
+    async ( req, username, password, done)=>{
+        logger = req.logger
         try {
            const user = await userService.getUser({email:username})
-           //console.log("USER ", user);
            if(!user){
-               //req.logger.info("No existe el ususario")
+               logger.info("No existe el ususario")
                return done(null, false);
             }
             if(!validatePassword(password,user)) return done (null, false);
@@ -96,9 +93,10 @@ const initializePassport = () => {
         clientSecret:'183cee86e9c62e3c301b0123c9712cfab7ffda93',
         callbackURL: 'http://localhost:3000/api/sessions/githubcallback',
         scope: ["user:email"],
-    }, async (accesToken, refreshToken,profile,done)=>{
+    }, async (req, accesToken, refreshToken,profile,done)=>{
+        logger = req.logger
         try {
-            console.log('profile' + profile._json); //vemos toda la info que viene del profile
+            logger.info(profile._json) //vemos toda la info que viene del profile
             const email = profile.emails[0].value;
             let user = await userService.getUser({email}).exec()
             if(!user){

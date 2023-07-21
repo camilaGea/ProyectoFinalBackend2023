@@ -4,39 +4,39 @@ import { UserDTO } from "../dao/DTOs/user.dto.js";
 const mongoUserManager = new UserManagerMongo
 
 class UserService {
-    async addUser(user){
+    async addUser(req, user){
         try {
             let usuario = new UserDTO(user)
             return await mongoUserManager.addUser(usuario)
         } catch (error) {
-            console.log(error)
+            req.logger.error(error)
         }
     }
 
-    async getUsers(){
+    async getUsers(req, res){
         try {
             let users = await mongoUserManager.getUsers()
             return users
         } catch (error) {
-            console.log(error)
+            req.logger.error(error)
         }
         
     }
 
-    async getUser(email){
+    async getUser(req, email){
         try {
             let user = await mongoUserManager.getUser(email)
             return user
         } catch (error) {
-            console.log(error)
+            req.logger.error(error)
         }
     }
-    async getUserById(id){
+    async getUserById(req, id){
         try {
             let user = await mongoUserManager.getUserById(id)
             return user
         } catch (error) {
-            console.log(error)
+            req.logger.error(error)
         }
     }
 }

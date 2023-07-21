@@ -1,10 +1,10 @@
 export class CustomError{
-    static createError({name="Error",cause,message,errorCode}){
+    static createError( req,res, {name="Error",cause,message,errorCode}){
         const error = new Error(message);
         error.name = name;
         error.code = errorCode;
-        error.cause = cause
-        console.log("error", error.cause)
+        error.cause = cause;
+        req.logger.info("error", error.cause)
         throw error;
     }
 }

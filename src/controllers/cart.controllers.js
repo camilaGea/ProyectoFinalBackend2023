@@ -5,7 +5,6 @@ import {CustomError} from '../errors/customError.js'
 import {EError} from '../errors/enum.js'
 import { generateCartErrorParam, generateProductErrorParam} from '../errors/infoError.js'
 
-
 const ticketManager = new TicketService()
 const cartService = new CartsService()
 const productsService = new ProductsService()
@@ -259,8 +258,6 @@ class CartController {
             const code = Math.floor(Math.random() * 10000)
             const purchaser = req.session.user.email
             
-            //console.log(code, amount, purchaser, purchase_datetime);
-
             let ticket = await ticketManager.createTicket(code, purchase_datetime, amount, purchaser)
 
             res.send({

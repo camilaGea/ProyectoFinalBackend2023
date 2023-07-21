@@ -13,19 +13,19 @@ export default class CartManager{
         this.path = filePath
     }
 
-    getCarts = async() => {
+    getCarts = async(req, res) => {
         if(fs.existsSync(this.path)){
             const cartData =  await fs.promises.readFile(this.path, "utf-8"); //lee y devuelve los datos
             const carts = JSON.parse(cartData);
-            console.log(carts)
+            req.logger.info(carts)
             return carts
         }else{
-            console.log('[]')
+            req.logger.info('[]')
             return []
         }
     }
 
-    create = async() =>{
+    create = async( req, res) =>{
         try {
             const carts = await this.getCarts();
             let cart= {
@@ -36,7 +36,7 @@ export default class CartManager{
             await fs.promises.writeFile(this.path,JSON.stringify(carts,null,2),"utf-8");
             return cart; 
         } catch (error) {
-           console.log(error);     
+            req.logger.error(error) 
         }
     }
 

@@ -11,23 +11,23 @@ export default class ProductManager{
         this.path = filePath
     }
 
-    saveProduct = async (products) => {
+    saveProduct = async (req, products) => {
         try{
             const productData = JSON.stringify(products, null , '\t');
             await fs.promises.writeFile(this.path, productData) //guardo los productos
         } catch(error){
-            console.log(error)
+            req.logger.error(error)
         }
     }
 
-    getProducts = async() => {
+    getProducts = async(req, res) => {
         if(fs.existsSync(this.path)){
             const productData =  await fs.promises.readFile(this.path, "utf-8"); //lee y devuelve los datos
             const prod = JSON.parse(productData);
-            console.log(prod)
+            req.logger.info(prod)
             return prod
         }else{
-            console.log('[]')
+            req.logger.error('[]')
             return []
         }
     }
@@ -37,12 +37,10 @@ export default class ProductManager{
         try{
             const productos = await this.getProducts();
             if(!title || !description || !price || !code || !stock || !category){
-                //console.log('No ha llenado los datos (titulo-descripcion-precio-ruta-codigo-stock)')
                 return { status: "error", message: "No ha llenado los datos" }
             }
             const codProduct = productos.find(product => product.code === code )
             if(codProduct){
-                //console.log(`El codigo ${code} del producto ${title} ya esta registrado`)
                 return { status: "error", message: "codigo repetido!" }
             }
             if(status === undefined){
@@ -66,7 +64,7 @@ export default class ProductManager{
             const productData = JSON.stringify(productos, null , '\t');
             await fs.promises.writeFile(this.path, productData)
             return `Se agrego el producto ${title} `
-            //console.log(`El producto ${title} agregado correctamente`)
+            
         }catch(error){
             return error
         }
@@ -112,17 +110,16 @@ export default class ProductManager{
         return "El producto se actualizo correctamente"  
     }  
 
-    deleteProduct = async(id)=>{
+    deleteProduct = async(req, id)=>{
         const prod = await this.getProducts()
         const producto = prod.find(producto => producto.id == id)
         if(!producto){
-            console.log(`El producto con id ${id} no existe`  )
+            req.logger.info(`El producto con id ${id} no existe`)
             return
         }
         const indice = prod.indexOf(producto);
         prod.splice(indice,1)  
         const productData = JSON.stringify(prod, null , '\t');
         await fs.promises.writeFile(this.path, productData)  
-        //this.saveProduct(prod)
     }
 }
