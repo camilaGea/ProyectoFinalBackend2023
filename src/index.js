@@ -22,6 +22,9 @@ import {errorHandler} from './middleware/errorHandle.js'
 import { addLogger } from './utils.js'
 import { getLogger } from "./utils.js";
 
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUiExpress from 'swagger-ui-express';
+
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
 
@@ -54,6 +57,21 @@ app.use(express.static(__dirname + '/public'));
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentación de Proyecto CoderHouse Comision-51185',
+            description: 'Proyecto desarrollado por Camila'
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJsDoc(swaggerOptions)
+
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 
 app.use('/', viewsRouter);
