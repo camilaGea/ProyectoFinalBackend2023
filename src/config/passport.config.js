@@ -72,19 +72,22 @@ const initializePassport = () => {
     ));
 
     passport.use('login', new LocalStrategy({usernameField:'email'}, 
-    async ( req, username, password, done)=>{
-        logger = req.logger
+    async (username, password, done)=>{
+        //logger = req.logger
         try {
            const user = await userService.getUser({email:username})
            if(!user){
-               logger.info("No existe el ususario")
+               
                return done(null, false);
             }
-            if(!validatePassword(password,user)) return done (null, false);
+            if(!validatePassword(password,user)){
+                return done (null, false);
+            } 
+                
             return done(null,user);
 
         } catch (error) {
-            return done("Error al intentar ingresar: " + error);
+            return done(error);
         }
     }))
 

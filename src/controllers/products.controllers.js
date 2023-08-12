@@ -49,7 +49,6 @@ class ProductsController {
                     errorCode: EError.INVALID_JSON
                 })
             }
-
             let producto = await productsService.newProduct(title,description,price,thumbnail,code,stock, category, status)
             if (producto.status === "error") {
                 req.logger.error('error en productService ')

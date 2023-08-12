@@ -4,7 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test1": "mocha test/product.test.js",
+    "test2": "mocha test/cart.test.js",
+    "test3": "mocha test/sessions.test.js"
   },
   "keywords": [],
   "author": "",
@@ -29,5 +32,10 @@
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.10.0"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  }
 }
