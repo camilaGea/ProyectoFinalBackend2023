@@ -11,9 +11,11 @@ class ProductsServices {
         const product = await productManager.getProductsId(id)
         return product
     }
-    newProduct = async (title, description, price, thumbnail, code, stock, category, status) =>{
+    newProduct = async ( user , title, description, price, thumbnail, code, stock, category, status) =>{
         const product = new ProductoDTO({title, description, price, thumbnail, code, stock, category, status})
-        const result = await productManager.addProduct(product);
+       
+        const result = await productManager.addProduct(user, product);
+       
         return result
     }
     updateProductById = async (id, body) => {

@@ -13,6 +13,7 @@ import cartRouter from "./routes/cart.router.js"
 import sessionsRouter from "./routes/sessions.router.js"
 import mockingRouter from "./routes/mosckin.router.js"
 import loggerTest from "./routes/logger.router.js"
+import usersRouter from "./routes/user.router.js"
 import ProductManagerMongo from "./dao/managerMongo/productMongo.js";
 import MenssageMongo from "./dao/managerMongo/menssageMongo.js";
 import mongoose from "mongoose";
@@ -38,7 +39,7 @@ app.use(addLogger)
 const logg = getLogger()
 const server = app.listen(PORT, () =>{ logg.info('servidor funcionando en e puerto ' + PORT)});
 
-app.use(express.json());// entiende los datos que me envian
+app.use(express.json()); // entiende los datos que me envian
 app.use(express.urlencoded({extended:true}));
 
 app.use(session({
@@ -75,6 +76,7 @@ app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 
 app.use('/', viewsRouter);
+app.use('/api/users', usersRouter)
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/sessions', sessionsRouter)

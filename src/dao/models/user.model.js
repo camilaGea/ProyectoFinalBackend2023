@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     rol:{
         type: String,
-        default: "usuario"
+        default: "user"
     },
     email:{
         type: String,
@@ -33,6 +33,23 @@ const userSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'carts',
         require:true
+    },
+    documents:{
+        type: [{
+            name:{ type: String},
+            reference:{ type: String}
+        }],
+        default: []
+    },
+    last_connection:{
+        type: Date,
+        default: null
+    },
+    status:{
+        type:String,
+        require:true,
+        enums:["completo","incompleto","pendiente"],
+        default:"pendiente"
     }
 })
 

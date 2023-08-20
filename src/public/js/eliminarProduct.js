@@ -12,8 +12,6 @@ form.addEventListener('submit', e =>{
             'Content-Type': 'application/json'
         }
     }).then(result=>{
-
-         window.location.replace('/prueba')
-
+        window.location.replace('/prueba')
     })
 })

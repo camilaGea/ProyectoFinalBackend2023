@@ -52,8 +52,9 @@ export default class ProductManagerMongo {
         }
     }
 
-    async addProduct(product){
+    async addProduct(user, product){
         try{
+           
             const codProduct = await productosModel.findOne({code: product.code})
             
             if(codProduct){
@@ -69,6 +70,7 @@ export default class ProductManagerMongo {
                 status: product.status,
                 stock: product.stock,
                 category: product.category,
+                owner: user
             }
 
             return await productosModel.create(newProduct)

@@ -8,6 +8,8 @@ const MONGO_URL = process.env.MONGO_URL;
 const CORREO_ADMIN = process.env.CORREO_ADMIN;
 const PASSWORD_ADMIN = process.env.PASSWORD_ADMIN;
 const SECRET = process.env.SECRET;
+const EMAIL = process.env.ADMIN_EMAIL;
+const PASS = process.env.ADMIN_PASS;
 
 export const config = {
     server: {
@@ -25,5 +27,9 @@ export const config = {
     },
     entorno: {
         environment: ENVIRONMENT
+    },
+    gmail: {
+        adminEmail: EMAIL,
+        adminPass: PASS
     }
 }

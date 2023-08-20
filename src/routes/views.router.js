@@ -17,5 +17,14 @@ router.get('/register', viewsController.register )
 router.get('/chat', viewsController.chat )
 router.get('/realtimeproducts' , viewsController.realtimeproducts )
 router.get('/prueba' , viewsController.admin )
+router.get("/forgotpassword",(req,res)=>{
+    res.render("forgotPassword");
+});
+
+router.get("/resetpassword",(req,res)=>{
+    const token = req.query.token;
+    res.render("resetPassword",{token});
+});
+
 
 export default router;

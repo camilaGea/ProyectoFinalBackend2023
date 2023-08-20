@@ -12,5 +12,4 @@ form.addEventListener('submit', e=>{
             'Content-Type': 'application/json'
         }
     }).then(result=>result.json())
-    .then(json, req => req.logger.info(json))
 })

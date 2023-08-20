@@ -17,7 +17,8 @@ const schema = new mongoose.Schema({
         require:true
     },
     thumbnail:{
-        type:[],
+        type:String,
+        default: ""
     },
     code:{
         type:Number,
@@ -35,8 +36,8 @@ const schema = new mongoose.Schema({
         require:true
     },
     owner:{
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'users',
         default: 'admin'
     }
 })

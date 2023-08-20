@@ -1,29 +1,64 @@
 import userModel from '../models/user.model.js'
 
 export class UserManagerMongo{
-    async addUser(req, res, user){
+
+    //agrega un usuario
+    async addUser(user){
         try {
             return await userModel.create(user)
         } catch (error) {
-            req.logger.error(error)
+            return error
         }
     }
 
-    async getUserById(req, res, id){
+    //busca un usuario por su id
+    async getUserById( id){
         try {
-            let user = await userModel.findOne({ _id: id })
+            let user = await userModel.findById(id)
             return user
         } catch (error) {
-            req.logger.error(error)
+            return error
         }
     }
     
-    async getUser(req, res, email){
+    //busca un usuario por un email
+    async getUser(email){
         try {
             let user = await userModel.findOne(email)
             return user
         } catch (error) {
-            req.logger.error(error)
+            return error
+            
+        }
+    }
+
+    //actualizar un usuiario pasando el email del usuario y el body que representa lo que se actualiza
+    async updateUser(email, body){
+        try{
+            return await  userModel.findOneAndUpdate( email,body)
+        }catch(error){
+            return error
+        }
+    }
+
+    //actualiza un usuario pasando el id del usuario y el user lo que se actualiza
+    async updateUserId(id, user){
+        try{
+            return await  userModel.findByIdAndUpdate( id,user)
+        }catch(error){
+            return error
+        }
+    }
+
+    //actualizo la propiedad lastConnection del usuario
+    async updateLastConnection (email, data){
+        try {
+            let user = await userModel.updateOne(
+                { email: email }, { $set: { 'last_connection': data }}
+            )
+            return user
+        } catch (error) {
+           return error
         }
     }
 }

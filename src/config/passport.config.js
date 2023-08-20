@@ -33,16 +33,21 @@ const initializePassport = () => {
         async (req, username, password, done) =>{
             const { nombre, apellido, email, edad } = req.body;
             try {
+               
                 if (!nombre || !apellido || !email || !edad) {
                     return done(null,false, req.body); // 
                 }
-                const user = await userService.getUser({email:username}); 
+
+                const user = await userService.getUser({email: username}); 
+
                 if(user){
                     req.logger.info('el usuario existe')
                     return done(null,false);
                 }
+
                 const emailAdmin = config.auth.account
                 const passAdmin = config.auth.pass
+                
                 if (email == emailAdmin && password == passAdmin) {
                     const newUser = {
                         nombre, apellido, email, edad, password: createHash(password) , rol: 'admin'
@@ -63,6 +68,7 @@ const initializePassport = () => {
                 }
 
                 const result = await userService.addUser(newUser);
+                
                 return done(null, result);
 
             } catch (error) {
@@ -73,12 +79,10 @@ const initializePassport = () => {
 
     passport.use('login', new LocalStrategy({usernameField:'email'}, 
     async (username, password, done)=>{
-        //logger = req.logger
         try {
            const user = await userService.getUser({email:username})
            if(!user){
-               
-               return done(null, false);
+            return done(null, false);
             }
             if(!validatePassword(password,user)){
                 return done (null, false);
