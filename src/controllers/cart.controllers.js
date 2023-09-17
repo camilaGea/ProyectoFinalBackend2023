@@ -246,9 +246,9 @@ class CartController {
                     updateProduct.stock = updateProduct.stock - product.quantity // descuento el stock
                     amount += product.idProduct.price * product.quantity // sumo el precio
                     await productsService.updateProductById(product.idProduct._id, updateProduct) // actualizo el stock del producto
-                    console.log('hola1')
+                    
                 }else{
-                    console.log('chau')
+                    
                     // si la cantidad es mayor al stock disponible
                     sbProducts.push(product)
                 }
@@ -262,7 +262,6 @@ class CartController {
             const purchaser = req.session.user.email
             
             let ticket = await ticketManager.createTicket(code, purchase_datetime, amount, purchaser)
-            console.log('ticket: ', ticket)
             
             res.send({
                 status: "success",

@@ -20,13 +20,7 @@
                     <td>{{this.quantity}}</td>
                     <td>${{this.idProduct.price}}</td>
                     <td>
-                        <button onclick="eliminarProducto('{{this._id}}','{{id}}')">X</button>
-                    </td>
-                    
-                    <td>
-                        <form id="deleteForm{{this._id}}, {{id}}">
-                            <button type="button" onclick="deleteProduct('{{this._id}}')">Anular Producto</button>
-                        </form>
+                        <button onclick="eliminarProducto('{{this.idProduct._id}}','{{../cartid}}')">X</button>
                     </td>
                 </tr>
 
@@ -34,10 +28,10 @@
         </tbody>
     </table>
     <div>
-        <form action="/api/carts/{{id}}/purchase" method="get">
-            <button>Terminar Compra</button>
-        </form>
+        <button onclick="ticket('{{cartid}}')" >Terminaar Compra</button>
+        
     </div>
 </div>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/cart.js"></script>

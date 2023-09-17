@@ -63,7 +63,7 @@ class UserService {
         try {
             await mongoUserManager.deleteUser(email)
         } catch (error) {
-            console.log(error)
+            return(error)
         }
     }
 
@@ -72,7 +72,7 @@ class UserService {
             let user = await mongoUserManager.updateRoll(email, rol)
             return user
         } catch (error) {
-            console.log(error)
+           return error
         }
     }
 }

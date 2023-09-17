@@ -1,14 +1,15 @@
 import { Router } from "express";
 import UserController from "../controllers/user.controllers.js";
 import { uploaderDocument } from "../utils.js";
+import {adminAccess} from "../middleware/rolVerification.js"
 
 const router = Router()
 const userController = new UserController
 
-router.get('/', userController.getUsers) //devuelve datos de los usarios
-router.delete('/', userController.deleteUsers) //debera limpiar usuarios que no hayan tenido conexion en los ultimos 2 dias.
-router.post('/:uemail', userController.deleteUser) //debera eliminar usuario
-router.get('/premium/:id', userController.rollSwitch) // debra cambiar el roll
+router.get('/', adminAccess, userController.getUsers) //devuelve datos de los usarios
+router.delete('/', adminAccess ,userController.deleteUsers) //debera limpiar usuarios que no hayan tenido conexion en los ultimos 2 dias.
+router.post('/:uemail', adminAccess, userController.deleteUser) //debera eliminar usuario
+router.get('/premium/:id',adminAccess, userController.rollSwitch) // debra cambiar el roll
 router.post('/changeRoll/:uemail', userController.changeRoll) // d
 router.post("/:uid/documents",
 

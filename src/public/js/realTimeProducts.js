@@ -85,7 +85,6 @@ formDelete.addEventListener("submit", (evt) => {
 });
 
 socket.on("newList", (response) => { //escucho lo que me envia el servidor 
-    console.log('response ', response)
     if (response.status === "success") {
         let list = "";
 

@@ -46,7 +46,6 @@ class ProductsController {
 
     postProduct =  async (req,res)=> {
         try{
-            console.log(req.body)
             let {title, description, price, thumbnail, code, stock, category, status, owner} = req.body
 
             if(status === undefined){ status = false}

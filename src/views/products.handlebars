@@ -26,9 +26,7 @@
                 <td>{{this.category}}</td>
                 <td>{{this.description}}</td>
                 <td>
-                    <form action="/api/carts/{{../idcart}}/product/{{this._id}}" method="post">
-                            <button>agragar al carrito</button>
-                    </form>
+                    <button type="button" class="btn btn-primary" onclick="agregarACarrito('{{this._id}}','{{../idcart}}','{{this.stock}}')">Agregar a carrito</button>
                 </td>
                 </tr>
             </tbody>
@@ -41,3 +39,6 @@
     <a href={{productos.nextLink}}><button>Siguiente</button></a>
     {{/if}}
 </div>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/producto.js"></script>

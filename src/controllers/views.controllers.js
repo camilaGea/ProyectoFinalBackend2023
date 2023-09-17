@@ -17,11 +17,17 @@ class ViewsController{
         res.render("realTimeProducts", {productos, user})
     }
 
+    ticket = async (req, res) =>{
+        const ticket = req.query.ticketData;; 
+        const payload = JSON.parse(ticket);
+        res.render('ticket', {payload});
+    }
+
     cart = async (req,res) =>{
         //para visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito. 
-        let id = req.params.cid;
-        let cart = await viewsServices.getCarts(id)
-        res.render('cart', {cart, id});
+        let cartid = req.params.cid;
+        let cart = await viewsServices.getCarts(cartid)
+        res.render('cart', {cart, cartid});
     }
 
     productos =  async (req,res) =>{
@@ -59,7 +65,6 @@ class ViewsController{
             }
             res.render('user', data)
         } catch (error) {
-            console.log(error)
             req.logger.error(error)
         }
     }

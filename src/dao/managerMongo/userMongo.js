@@ -27,7 +27,7 @@ export class UserManagerMongo{
             let users = await userModel.find()
             return users
         } catch (error) {
-            console.log(error)
+            return error
         }
     }
 
@@ -79,7 +79,7 @@ export class UserManagerMongo{
             )
             return user
         } catch (error) {
-            console.log(error)
+            return error
         }
     }
 
@@ -87,7 +87,8 @@ export class UserManagerMongo{
         try {
             await userModel.findOneAndDelete({email: email})
         } catch (error) {
-            console.log(error)
+            return error
+          
         }
     }
 

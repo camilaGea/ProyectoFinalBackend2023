@@ -104,7 +104,6 @@ io.on('connection',  socket =>{
     
     //eliminar Producto
     socket.on("productDelete", async (pid) =>{ //escucho lo que me manda el cliente
-        console.log('id server ', pid)
         let productid = await pm.deleteProduct(pid); //elimino el producto con el id enviado desde el cliente
         if(productid.status === "error"){
             io.emit("newList", { status: "error", message: 'No se pudo eliminar el producto ' })

@@ -1,42 +1,41 @@
 
-function deleteProduct(productId, id) {
-    fetch(`/api/carts/${id}/products/${productId}`, {
-        method: 'DELETE'
+function ticket(cartid){
+    let options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 
+                'application/json;charset=utf-8'
+        },
+    }
+    let fetchRes = fetch(`/api/carts/${cartid}/purchase`, 
+                                    options);
+    fetchRes.then(res =>
+        res.json()).then(d => {
+        window.location.replace(`/ticket?ticketData=${JSON.stringify(d.payload)}`);                                   
     })
-    .then(response => {
-        if (response.ok) {
-            // Manejar la respuesta exitosa aquí (por ejemplo, actualizar la interfaz de usuario).
-        } else {
-            // Manejar errores si es necesario.
-        }
-    })
-    .catch(error => {
-        console.error('Error al realizar la solicitud DELETE:', error);
-    });
+                                    
 }
 
-
 function eliminarProducto(productID, id){
-    console.log("llegue onclick")
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString);
-    //const cartID=urlParams.get('cid');
-    console.log(id);
-    console.log(productID)
-    
     let options = {
         method: 'DELETE',
         headers: {
             'Content-Type': 
                 'application/json;charset=utf-8'
         },
-        //body: JSON.stringify(user)
     }
     let fetchRes = fetch(`/api/carts/${id}/products/${productID}`, 
                                     options);
     fetchRes.then(res =>
         res.json()).then(d => {
-            console.log(d);
             window.location.reload();
+            Swal.fire({
+				icon: "info",
+				title: "Producto Elimnado del carrito exitosamente",
+				text: "",
+				toast: true,
+				color: "#716add",
+			});
+            
         })
 }

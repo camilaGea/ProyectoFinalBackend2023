@@ -26,6 +26,7 @@ router.get("/resetpassword",(req,res)=>{
 });
 
 router.get('/users',  viewsController.users)
+router.get('/ticket', viewsController.ticket)
 
 
 export default router;
