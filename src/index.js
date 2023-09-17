@@ -31,7 +31,7 @@ const productsC = new ProductsController()
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
 
-const PORT = config.server.port;
+const PORT = config.server.port || 3000;
 const MONGO = config.mongo.url
 const SECRET = config.session.secret
 
