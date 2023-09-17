@@ -1,0 +1,29 @@
+.background {
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.userContainer {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.userRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.nameContainer {
+    border-color: red;
+    flex: 1;
+}
+
+.rollContainer {
+    flex: 1;
+}
+
+.deleteContainer {
+    flex: 1;
+}

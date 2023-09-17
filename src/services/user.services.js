@@ -25,7 +25,7 @@ class UserService {
 
     async getUser( email){
         try {
-            let user = await mongoUserManager.getUser(email)
+            let user = await mongoUserManager.getUser({email})
             return user
         } catch (error) {
             return error
@@ -40,6 +40,7 @@ class UserService {
            return error
         }
     }
+    
     async updateUserByEmail (email,body){
         const user = await mongoUserManager.updateUser(email, body)
         return user
@@ -56,7 +57,23 @@ class UserService {
         } catch (error) {
            return error
         }
+    }
 
+    async deleteUser(email){
+        try {
+            await mongoUserManager.deleteUser(email)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async updateRoll (email, rol){
+        try {
+            let user = await mongoUserManager.updateRoll(email, rol)
+            return user
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

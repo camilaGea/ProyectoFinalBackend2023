@@ -106,7 +106,7 @@ class SessionsControllers{
                 edad: req.user.edad,
                 rol: req.user.rol
             }
-
+           
             let last_connection = new Date()
             await userService.updateLastConnection(user.email, last_connection)
             res.status(200).send({payload: user, message:"Primer logueo!!"})

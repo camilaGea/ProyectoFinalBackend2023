@@ -21,6 +21,16 @@ export class UserManagerMongo{
         }
     }
     
+    //busca todo los usuarios
+    async getUsers(){
+        try {
+            let users = await userModel.find()
+            return users
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     //busca un usuario por un email
     async getUser(email){
         try {
@@ -61,4 +71,24 @@ export class UserManagerMongo{
            return error
         }
     }
+
+    async updateRoll(email, rol){
+        try {
+            let user = await userModel.updateOne(
+                { email: email}, { $set: { 'rol': rol}}
+            )
+            return user
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async deleteUser(email){
+        try {
+            await userModel.findOneAndDelete({email: email})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 }

@@ -6,6 +6,14 @@ import {generateProductErrorInfo, generateProductErrorParam} from '../errors/inf
 const productsService = new ProductsServices()
 
 class ProductsController {
+    getp = async (req,res) => {
+        try{
+            let product = await productsService.getp()
+            res.send({status: "sucess", product})
+        }catch (error){
+            res.status(500)
+        }
+    }
     getProduct = async (req,res) =>{
         try{
             let { limit,page = 1,category,disp,sort } = req.query;
@@ -38,7 +46,9 @@ class ProductsController {
 
     postProduct =  async (req,res)=> {
         try{
-            let {title, description, price, thumbnail, code, stock, category, status} = req.body
+            console.log(req.body)
+            let {title, description, price, thumbnail, code, stock, category, status, owner} = req.body
+
             if(status === undefined){ status = false}
 
             if(!title || !description || !price || !code || !stock || !category){
@@ -49,16 +59,18 @@ class ProductsController {
                     errorCode: EError.INVALID_JSON
                 })
             }
-            let user = req.session.passport.user
             
-            let producto = await productsService.newProduct(user , title,description,price,thumbnail,code,stock, category, status)
+            let producto = await productsService.newProduct( title,description,price,thumbnail,code,stock, category, status, owner)
+            
             if (producto.status === "error") {
                 req.logger.error('error en productService ')
                 return res.status(400).send({producto});
             }
+            
             res.send({status: 'Success', producto})    
+        
         }catch (error){
-            res.status(500).send({status:"error 500", error:error.message})
+            res.status(500).send({status:"error", error:error.message})
         }
     }
 
@@ -100,12 +112,41 @@ class ProductsController {
                 })
             }
 
-            const producto = await productsService.deleteProduct(id)
+            const productById = await productsService.getAllProductsById(pid);
 
-            if (producto.status === "error") {
-                req.logger.error('error eliminar en product services')
-                return res.status(400).send({producto});
+            if (productById.owner == req.session.email || req.session?.admin == true) {
+                
+                await productsService.deleteProduct(id)
+                let user = await usersService.getUser(productById.owner)
+
+                if (user.roll === 'premium') {
+
+                    const transport = createTransport({
+                        service: 'gmail',
+                        port: 578,
+                        auth: {
+                            user: config.adminEmail,
+                            pass: config.adminPass
+                        }
+                    })
+
+                    await transport.sendMail({
+                        from:'Servicio de Node',
+                        to: user.email,
+                        subject: 'Su Producto fue eliminado',
+                        html: `
+                        <div>
+                            <h1>Su producto ${productById.title} fue eliminado</h1>
+                        </div>`
+                    })
+                }
             }
+
+
+            i//f (producto.status === "error") {
+            //    req.logger.error('error eliminar en product services')
+            //    return res.status(400).send({producto});
+            //}
 
             return res.status(200).send({menssage:"paso", producto});
         } catch (error) {

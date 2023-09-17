@@ -1,25 +1,65 @@
+
 <div class="header">
         <h2>Bienvenido {{user.nombre}}</h2>
         <p>Tu rol es {{user.rol}}</p>
         <a href="/api/sessions/logout"><button>Cerrar sesion</button></a>
 </div>
 
-<div >
-    <form id="addProduct" >
-        <h3 >Agregar Producto</h3>
-        <input type="text" required id="title" name="title" placeholder="Ingrese el nombre" >
-        <input type="number" min="1"  required id="price" name="price" placeholder="Ingrese el precio" >
-        <input type="text" required id="code" name="code" placeholder="Ingrese el code" >
-        <input type="number" min="1" required id="stock" name="stock" placeholder="Ingrese el stock" >
-        <input type="text" required id="category" name="categoty" placeholder="Ingrese la categoria" >
-        <input type="text" required id="description" name="description" placeholder="Ingrese la descripcion" >
-        <label > <input type="checkbox" name="status" id="status" value="true"><span >Status</span></label>
-        <input type="text" required id="thumbnail" name="thumbnail" placeholder="Url Imagen" >
-        {{!-- <input  type="file" name="thumbnail" id="thumbnail" placeholder="Ingrese imagen"> --}}
+<div>
+    <form id="addProduct">
+        <h3>Agregar Producto</h3>
+        <div class="form-group">
+            <label for="title">Nombre del Producto:</label>
+            <input type="text" required id="title" name="title" placeholder="Ingrese el nombre">
+        </div>
         <br>
-        <input className="btn-cargar" type="submit" value="Cargar">
+        <div class="form-group">
+            <label for="price">Precio:</label>
+            <input type="number" min="1" step="0.01" required id="price" name="price" placeholder="Ingrese el precio">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="code">Código:</label>
+            <input type="text" required id="code" name="code" placeholder="Ingrese el código">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" min="1" required id="stock" name="stock" placeholder="Ingrese el stock">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="category">Categoría:</label>
+            <input type="text" required id="category" name="category" placeholder="Ingrese la categoría">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="description">Descripción:</label>
+            <textarea required id="description" name="description" placeholder="Ingrese la descripción"></textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label>Status:</label>
+            <input type="checkbox" name="status" id="status" value="true">
+            <span>Activo</span>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="thumbnail">URL de la Imagen:</label>
+            <input type="text" required id="thumbnail" name="thumbnail" placeholder="URL de la imagen">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="owner">Email del Dueño del Producto:</label>
+            <input type="text" id="owner" name="owner" placeholder="Email del dueño del producto">
+        </div>
+        <br>
+        <div class="form-group">
+            <input class="btn-cargar" type="submit" value="Guardar">
+        </div>
     </form>
 </div>
+
 
 <div>
     <div >
@@ -63,5 +103,6 @@
     </table>
 </div>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>

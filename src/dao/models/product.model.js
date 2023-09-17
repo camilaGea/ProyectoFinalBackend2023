@@ -36,8 +36,8 @@ const schema = new mongoose.Schema({
         require:true
     },
     owner:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'users',
+        type: String,
+        required: true,
         default: 'admin'
     }
 })

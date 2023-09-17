@@ -1,9 +1,9 @@
+
 const socket = io();
 
 //agregar producto
 
 const formAdd = document.getElementById("addProduct");
-//const product = document.querySelectorAll("input");
 const title = document.getElementById("title");
 const price = document.getElementById("price");
 const code = document.getElementById("code");
@@ -12,6 +12,7 @@ const category = document.getElementById("category");
 const description = document.getElementById("description");
 const statuss = document.getElementById("status");
 const thumbnail = document.getElementById("thumbnail");
+const owner = document.getElementById("owner");
 
 formAdd.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -25,44 +26,53 @@ formAdd.addEventListener("submit", (e) => {
         description: description.value,
         status: statuss.value,
         thumbnail: thumbnail.value,
+        owner: owner.value
     });
 });
 
-socket.on("productAdd", (req, res, data) => {
-    if (data.status === "error") {
-       return req.logger.info(data.message)
+socket.on("productAdd", (response) => {
+    if (response.status === "success") {
+        let list = "";
+        response.data.forEach(({ _id, title, price, code, stock, category, description, status, owner  }) => {
+            list += `<tr>
+            <td>${_id}</td>
+            <td>${title}</td>
+            <td>${price}</td>
+            <td>${code}</td>
+            <td>${stock}</td>
+            <td>${category}</td>a
+            <td>${description}</td>
+            <td>${status}</td>
+            <td>${owner}</td>
+            </tr>`;
+        });
+
+        const listaAct =
+            `
+        <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">code</th>
+        <th scope="col">stock</th>
+        <th scope="col">category</th>
+        <th scope="col">description</th>
+        <th scope="col">status</th>
+        <th scope="col">owner</th>
+        </tr>` + list;
+        document.getElementById("tableProduct").innerHTML = listaAct;
+    } else if (response.status === "error") {
+        mostrarMensajeDeError(response.message);
     }
-    let list = "";
-    data.forEach(({ _id, title, price, code, stock, category, description, status }) => {
-        list += `<tr>
-        <td>${_id}</td>
-        <td>${title}</td>
-        <td>${price}</td>
-        <td>${code}</td>
-        <td>${stock}</td>
-        <td>${category}</td>
-        <td>${description}</td>
-        <td>${status}</td>
-        </tr>`;
-    });
-
-    const listaAct =
-        `
-    <tr>
-    <th scope="col">ID</th>
-    <th scope="col">Name</th>
-    <th scope="col">Price</th>
-    <th scope="col">code</th>
-    <th scope="col">stock</th>
-    <th scope="col">category</th>
-    <th scope="col">description</th>
-    <th scope="col">status</th>
-    </tr>` + list;
-    document.getElementById("tableProduct").innerHTML = listaAct;
 });
 
-
-
+function mostrarMensajeDeError(mensaje) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: mensaje,
+    })
+}
 
 //eliminar producto
 const formDelete = document.getElementById("formDelete");
@@ -74,34 +84,43 @@ formDelete.addEventListener("submit", (evt) => {
     socket.emit("productDelete", { _id: id.value }); //envio el id producto a eliminar desde el Cliente al Servidor
 });
 
-socket.on("newList", (req, data) => { //escucho lo que me envia el servidor 
-    if (data.status === "error") {
-        return req.logger.info(data.message)
+socket.on("newList", (response) => { //escucho lo que me envia el servidor 
+    console.log('response ', response)
+    if (response.status === "success") {
+        let list = "";
+
+        response.data.forEach(({ _id, title, price, code, stock, category, description, status, owner}) => {
+            list += `
+                        <tr>
+                        <td>${_id}</td>
+                        <td>${title}</td>
+                        <td>${price}</td>
+                        <td>${code}</td>
+                        <td>${stock}</td>
+                        <td>${category}</td>
+                        <td>${description}</td>
+                        <td>${status}</td>
+                        <td>${owner}</td>
+                        </tr>`;
+        });
+
+        const listaAct =
+            `
+        <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">code</th>
+        <th scope="col">stock</th>
+        <th scope="col">category</th>
+        <th scope="col">description</th>
+        <th scope="col">status</th>
+        <th scope="col">owner</th>
+        </tr>` + list;
+        document.getElementById("tableProduct").innerHTML = listaAct;
+        
     }
-    let list = "";
-    data.forEach(({ _id, title, price, code, stock, category, description, status }) => {
-        list += `
-                    <tr>
-                    <td>${_id}</td>
-                    <td>${title}</td>
-                    <td>${price}</td>
-                    <td>${code}</td>
-                    <td>${stock}</td>
-                    <td>${category}</td>
-                    <td>${description}</td>
-                    <td>${status}</td>
-                    </tr>`;
-    });
-    const listAct =
-        ` <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">code</th>
-            <th scope="col">stock</th>
-            <th scope="col">category</th>
-            <th scope="col">description</th>
-            <th scope="col">status</th>
-            </tr>` + list;
-    document.getElementById("tableProduct").innerHTML = listAct;
+    else if (response.status === "error") {
+        mostrarMensajeDeError(response.message);
+    }    
 });

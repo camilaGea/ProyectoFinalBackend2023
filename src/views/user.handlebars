@@ -1,0 +1,43 @@
+<div class="background">
+
+    <div>
+        <div>
+            <h2>Monitoreo de Usuarios</h2>
+        </div>
+
+        <table class="userTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Actualizar Roll</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each usuarios}}
+                <tr class="userRow">
+                    <td class="nameCell">{{this.nombre}} {{this.apellido}}</td>
+                    <td class="rollCell">{{this.rol}}</td>
+                    <td class="actionsCell">
+                        <form action="/api/users/changeRoll/{{this.email}}" method="post">
+                            <select name="rol" class="rollSelect">
+                                <option value="user">User</option>
+                                <option value="premium">Premium</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            <button type="submit" class="rollSubmit">Actualizar Roll</button>
+                        </form>
+                    
+                    </td>
+                    <td> 
+                        <form action="/api/users/{{this.email}}" method="post" class="deleteContainer">
+                            <button type="submit" class="deleteButton">X</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>    
+</div>

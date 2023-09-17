@@ -22,10 +22,12 @@ import {config} from './config/config.js'
 import {errorHandler} from './middleware/errorHandle.js'
 import { addLogger } from './utils.js'
 import { getLogger } from "./utils.js";
+import ProductsController from "./controllers/products.controllers.js"
 
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUiExpress from 'swagger-ui-express';
 
+const productsC = new ProductsController()
 const pm = new ProductManagerMongo();
 const ms = new MenssageMongo();
 
@@ -74,7 +76,6 @@ const specs = swaggerJsDoc(swaggerOptions)
 
 app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
-
 app.use('/', viewsRouter);
 app.use('/api/users', usersRouter)
 app.use('/api/products', productRouter);
@@ -91,28 +92,27 @@ io.on('connection',  socket =>{
     logg.info('Usuario conectado')
 
     //agregar producto
-    socket.on("newProduct", async(data) =>{ //escucho lo que me manda el cliente
-        let producto = await pm.addProduct(data.title, data.description, data.price, data.thumbnail ,data.code, data.stock,data.category, data.status)
-        if (producto.status === "error"){ //si el codigo esta repetido o no cargo todos los datos
-            let mens = producto.message
-            return io.emit("productAdd", { status: "error", message: mens}) //envio al cliente el error  
+    socket.on("newProduct", async (data) => {
+        let product = await pm.addProduct(data);
+        if(product.status === 'error'){
+            io.emit("productAdd", { status: "error", message: 'No se pudo agregar el producto' }); // Envía un mensaje de error al cliente
         }
-        const dataActualizada = await pm.getP();// cargo todo correcto
-        return io.emit("productAdd", dataActualizada) // envio al cliente los productos actualizados con el reciente cargado
-    }) 
+        const dataActualizada = await pm.getP();
+        io.emit("productAdd", { status: "success", data: dataActualizada }); // Envía éxito y los datos actualizados
+    });
+    
     
     //eliminar Producto
     socket.on("productDelete", async (pid) =>{ //escucho lo que me manda el cliente
-        const id = await pm.getProductsId(pid) //busco el producto con ese id
+        console.log('id server ', pid)
+        let productid = await pm.deleteProduct(pid); //elimino el producto con el id enviado desde el cliente
+        if(productid.status === "error"){
+            io.emit("newList", { status: "error", message: 'No se pudo eliminar el producto ' })
+        }
         
-        if(id){
-            await pm.deleteProduct(pid); //elimino el producto con el id enviado desde el cliente
-            const dataActualizada = await pm.getP(); // traigo los productos actualizados
-            return io.emit("newList", dataActualizada); // le mando los productos sin el eliminado
-        }
-        if(!id){
-            io.emit("newList", { status: "error", message: `No se encontro el producto con id ${pid.id}` })
-        }
+        let dataActualizada = await pm.getP(); // traigo los productos actualizados
+        return io.emit("newList", {status: "succes", data: dataActualizada}); // le mando los productos sin el eliminado
+
     }) 
 
     //chat

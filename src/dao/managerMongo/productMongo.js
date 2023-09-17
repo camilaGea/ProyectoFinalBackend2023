@@ -52,9 +52,8 @@ export default class ProductManagerMongo {
         }
     }
 
-    async addProduct(user, product){
+    async addProduct(product){
         try{
-           
             const codProduct = await productosModel.findOne({code: product.code})
             
             if(codProduct){
@@ -70,11 +69,12 @@ export default class ProductManagerMongo {
                 status: product.status,
                 stock: product.stock,
                 category: product.category,
-                owner: user
+                owner: product.owner
             }
 
             return await productosModel.create(newProduct)
         }catch (error){
+            //return error
             return { status: "error", error: error };
         }
     }

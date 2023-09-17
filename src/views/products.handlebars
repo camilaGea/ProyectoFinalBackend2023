@@ -3,7 +3,8 @@
         <h2>Bienvenido {{user.nombre}}</h2>
         <p>Tu rol es {{user.rol}}</p>
         <a href="/api/sessions/logout"><button>Cerrar sesion</button></a>
-
+        
+        <a href="http://localhost:3000/carts/{{idcart}}"><button>Carrito</button></a>
     </div>
 
      <table id="tableProduct" >
@@ -24,7 +25,11 @@
                 <td>{{this.stock}}</td>
                 <td>{{this.category}}</td>
                 <td>{{this.description}}</td>
-                <td><button>Agregar al carrito</button></td>
+                <td>
+                    <form action="/api/carts/{{../idcart}}/product/{{this._id}}" method="post">
+                            <button>agragar al carrito</button>
+                    </form>
+                </td>
                 </tr>
             </tbody>
         {{/each}}

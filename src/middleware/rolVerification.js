@@ -24,7 +24,7 @@ export function rollPremiumVerify(req, res, next) {
 }
 
 export function rollDeleteVerify(req, res, next) {
-    if (req.session?.admin) return next()
-    if (req.session?.premium) return next()
+    if (req.session.user && req.session.user.rol == 'admin') return next()
+    if (req.session.user && req.session.user.rol == 'premium') return next()
     return res.status(401).send('Usted no tiene permisos')
 }

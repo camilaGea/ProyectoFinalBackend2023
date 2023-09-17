@@ -38,7 +38,7 @@ const initializePassport = () => {
                     return done(null,false, req.body); // 
                 }
 
-                const user = await userService.getUser({email: username}); 
+                const user = await userService.getUser(username); 
 
                 if(user){
                     req.logger.info('el usuario existe')
@@ -80,14 +80,15 @@ const initializePassport = () => {
     passport.use('login', new LocalStrategy({usernameField:'email'}, 
     async (username, password, done)=>{
         try {
-           const user = await userService.getUser({email:username})
+
+           const user = await userService.getUser(username)
            if(!user){
             return done(null, false);
             }
             if(!validatePassword(password,user)){
                 return done (null, false);
             } 
-                
+            
             return done(null,user);
 
         } catch (error) {

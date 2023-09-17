@@ -3,6 +3,10 @@ import ProductoDTO from '../dao/DTOs/products.dto.js'
 const productManager = new ProductManagerMongo()
 
 class ProductsServices {
+    getp = async () => {
+        let product = await productManager.getP()
+        return product
+    }
     getAllProducts = async (limit,page,category,disp,sort) =>{
         let products = await productManager.getProducts(limit,page,category,disp,sort)
         return products
@@ -11,10 +15,10 @@ class ProductsServices {
         const product = await productManager.getProductsId(id)
         return product
     }
-    newProduct = async ( user , title, description, price, thumbnail, code, stock, category, status) =>{
-        const product = new ProductoDTO({title, description, price, thumbnail, code, stock, category, status})
+    newProduct = async (  title, description, price, thumbnail, code, stock, category, status, owner) =>{
+        const product = new ProductoDTO({title, description, price, thumbnail, code, stock, category, status, owner})
        
-        const result = await productManager.addProduct(user, product);
+        const result = await productManager.addProduct(product);
        
         return result
     }

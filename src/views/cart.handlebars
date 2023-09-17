@@ -1,4 +1,7 @@
 <div>
+    <div>
+        <a href="http://localhost:3000/products"> <button>Volver</button> </a>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -6,7 +9,7 @@
                 <th scope="col">Cantidad</th>
                 <th scope="col">Precio</th>
             </tr>
-            <a href="http://localhost:3000/products">Homepage</a>
+            
         </thead>
         <tbody>
             {{#each cart.product}}
@@ -16,10 +19,25 @@
                     </td>
                     <td>{{this.quantity}}</td>
                     <td>${{this.idProduct.price}}</td>
-                    <td><button>Borrar Producto</button></td>
+                    <td>
+                        <button onclick="eliminarProducto('{{this._id}}','{{id}}')">X</button>
+                    </td>
+                    
+                    <td>
+                        <form id="deleteForm{{this._id}}, {{id}}">
+                            <button type="button" onclick="deleteProduct('{{this._id}}')">Anular Producto</button>
+                        </form>
+                    </td>
                 </tr>
 
               {{/each}}
         </tbody>
     </table>
+    <div>
+        <form action="/api/carts/{{id}}/purchase" method="get">
+            <button>Terminar Compra</button>
+        </form>
+    </div>
 </div>
+
+<script src="/js/cart.js"></script>

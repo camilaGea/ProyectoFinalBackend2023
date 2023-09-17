@@ -5,6 +5,7 @@ import {premiumAccess, adminAccess, rollDeleteVerify} from '../middleware/rolVer
 const productsController = new ProductsController()
 const router = Router();
 
+router.get('/pp', productsController.getp)
 router.get('/', productsController.getProduct)
 router.get('/:id',productsController.getProductsById )
 router.post('/', premiumAccess, adminAccess, productsController.postProduct)

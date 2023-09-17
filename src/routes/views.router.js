@@ -1,8 +1,7 @@
 import { Router } from "express";
 import ProductManagerMongo from "../dao/managerMongo/productMongo.js";
-//import {carts} from "../routes/cart.router.js"
-
 import ViewsController from "../controllers/views.controllers.js"
+import { adminAccess } from "../middleware/rolVerification.js"
 
 const viewsController = new ViewsController()
 
@@ -25,6 +24,8 @@ router.get("/resetpassword",(req,res)=>{
     const token = req.query.token;
     res.render("resetPassword",{token});
 });
+
+router.get('/users',  viewsController.users)
 
 
 export default router;

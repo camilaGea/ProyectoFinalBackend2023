@@ -1,29 +1,41 @@
-<div class="conteiner">
-    <table id="tableProduct" >
+<div>
+    <div class="header">
+        <h2>Bienvenido {{user.nombre}}</h2>
+        <p>Tu rol es {{user.rol}}</p>
+        <a href="/api/sessions/logout"><button>Cerrar sesion</button></a>
+        <form action="/api/carts/{{user.cart}}" method="get">
+            <button id="logout" class="btnInverted">Carrito</button>
+        </form>
+
+    </div>
+
+     <table id="tableProduct" >
         <thead>
             <tr>
-            <th >ID</th>
             <th >Nombre</th>
             <th >Precio</th>
-            <th >Codigo</th>
             <th >Stock</th>
             <th >Categoria</th>
             <th >Descripcion</th>
-            <th >Status</th>
             </tr>
         </thead>
-        {{#each productos}}
+        {{#each productos.docs}}
             <tbody>
                 <tr>
-                <td>{{this._id}}</td>
                 <td>{{this.title}}</td>
                 <td>{{this.price}}</td>
-                <td>{{this.code}}</td>
                 <td>{{this.stock}}</td>
                 <td>{{this.category}}</td>
                 <td>{{this.description}}</td>
-                <td>{{this.status}}</td>
+                <td><button>Agregar al carrito</button></td>
                 </tr>
             </tbody>
         {{/each}}
+    </table>
+    {{#if productos.hasPrevPage}}
+    <a href={{productos.prevLink}}><button>Anterior</button></a>
+    {{/if}}
+    {{#if productos.hasNextPage}}
+    <a href={{productos.nextLink}}><button>Siguiente</button></a>
+    {{/if}}
 </div>
